@@ -1,18 +1,21 @@
 # swift-logging-extras
 
-Extended functionality for Swift's logging system with dependency injection support.
+[![CI](https://github.com/coenttb/swift-logging-extras/workflows/CI/badge.svg)](https://github.com/coenttb/swift-logging-extras/actions/workflows/ci.yml)
+![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
 
-![Version](https://img.shields.io/badge/version-0.0.1-green.svg)
-![Swift](https://img.shields.io/badge/swift-6.0-orange.svg)
-![Platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20macOS%20%7C%20tvOS%20%7C%20watchOS-lightgrey.svg)
+Extensions for Swift's Logging framework with dependency injection support.
+
+## Overview
+
+This package extends Apple's swift-log with integration for Point-Free's Dependencies library, providing dependency injection support for Logger instances. It includes automatic test logger configuration and enhanced logging methods with metadata support.
 
 ## Features
 
-* **Dependencies integration**: Built-in support for the Dependencies package for clean dependency injection
-* **Test support**: Automatic test logger configuration with process name
-* **Enhanced logging**: Additional logging functionality with file and line metadata
-* **Type-safe**: Full type safety with Swift's Logger type
-* **Retroactive conformance**: Clean integration with existing Logger types
+- Dependencies integration for Logger instances
+- Automatic test logger configuration with process name
+- Enhanced logging method with file and line metadata
+- TestDependencyKey conformance for Logger
+- Type-safe dependency access via @Dependency property wrapper
 
 ## Installation
 
@@ -39,9 +42,7 @@ targets: [
 ]
 ```
 
-## Usage
-
-### Basic Usage with Dependencies
+## Quick Start
 
 ```swift
 import LoggingExtras
@@ -49,11 +50,32 @@ import Dependencies
 
 struct MyFeature {
     @Dependency(\.logger) var logger
-    
+
     func doSomething() {
         logger.info("Starting operation")
         // ... your code ...
         logger.debug("Operation completed")
+    }
+}
+```
+
+## Usage
+
+### Basic Usage with Dependencies
+
+Access the logger through the Dependencies system:
+
+```swift
+import LoggingExtras
+import Dependencies
+
+struct MyService {
+    @Dependency(\.logger) var logger
+
+    func performTask() {
+        logger.info("Task started")
+        logger.debug("Processing...")
+        logger.notice("Task completed")
     }
 }
 ```
@@ -69,7 +91,7 @@ import Testing
 
 @Test
 func testLogging() async throws {
-    try await withDependencies {
+    try await withDependencies { _ in
         // Logger is automatically set to test value
     } operation: {
         @Dependency(\.logger) var logger
@@ -78,30 +100,46 @@ func testLogging() async throws {
 }
 ```
 
-### Enhanced Logging with Metadata
-
-The package includes an enhanced logging method that automatically adds file and line metadata:
-
-```swift
-@Dependency(\.logger) var logger
-
-// This will include file and line information in the metadata
-logger.log(
-    .info,
-    "Operation completed",
-    metadata: ["userId": "12345"]
-)
-```
-
 ### Custom Logger Configuration
 
-You can override the logger dependency for specific features:
+Override the logger dependency for specific features:
 
 ```swift
-try await withDependencies {
-    $0.logger = Logger(label: "com.example.myapp.feature")
-} operation: {
-    // Your feature code with custom logger
+import LoggingExtras
+import Dependencies
+import DependenciesTestSupport
+
+@Test
+func testWithCustomLogger() async throws {
+    try await withDependencies {
+        $0.logger = Logger(label: "com.example.myapp.feature")
+    } operation: {
+        @Dependency(\.logger) var logger
+        logger.info("Using custom logger")
+    }
+}
+```
+
+### Enhanced Logging with Metadata
+
+Use the enhanced logging method that automatically adds file and line metadata:
+
+```swift
+import LoggingExtras
+import Dependencies
+import Logging
+
+struct MyFeature {
+    @Dependency(\.logger) var logger
+
+    func processUser(id: String) {
+        // Automatically includes file and line information in metadata
+        logger.log(
+            .info,
+            "Processing user",
+            metadata: ["userId": "\(id)"]
+        )
+    }
 }
 ```
 
@@ -117,7 +155,17 @@ extension DependencyValues {
 
 Access the logger through the Dependencies system.
 
-### Logger Extensions
+### Logger Extension
+
+```swift
+extension Logger: TestDependencyKey {
+    public static let testValue = Logger(label: ProcessInfo.processInfo.processName)
+}
+```
+
+Provides automatic test logger configuration.
+
+### Enhanced Logging Method
 
 ```swift
 extension Logger {
@@ -132,7 +180,12 @@ extension Logger {
 }
 ```
 
-Enhanced logging method that includes file and line metadata.
+Enhanced logging method that merges provided metadata with file and line information.
+
+## Related Packages
+
+- [swift-dependencies](https://github.com/pointfreeco/swift-dependencies) - A dependency management library inspired by SwiftUI's Environment
+- [swift-log](https://github.com/apple/swift-log) - A Logging API for Swift
 
 ## Requirements
 
@@ -141,4 +194,8 @@ Enhanced logging method that includes file and line metadata.
 
 ## License
 
-This package is licensed under the same terms as the swift-environment-variables package.
+This package is released under the Apache 2.0 license. See [LICENSE](LICENSE) for details.
+
+## Contributing
+
+Contributions are welcome. Please open an issue or pull request on GitHub.

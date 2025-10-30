@@ -7,7 +7,7 @@ import Testing
 struct LoggingExtrasTests {
     @Test
     func testLoggerDependency() async throws {
-        try await withDependencies {
+        try await withDependencies { _ in
             // Logger should be automatically set to test value
         } operation: {
             @Dependency(\.logger) var logger
@@ -37,7 +37,7 @@ struct LoggingExtrasTests {
     
     @Test
     func testEnhancedLogging() async throws {
-        try await withDependencies {
+        try await withDependencies { _ in
             // Logger should be automatically set to test value
         } operation: {
             @Dependency(\.logger) var logger
@@ -56,7 +56,7 @@ struct LoggingExtrasTests {
     
     @Test
     func testLoggerLevels() async throws {
-        try await withDependencies {
+        try await withDependencies { _ in
             // Logger should be automatically set to test value
         } operation: {
             @Dependency(\.logger) var logger
@@ -74,7 +74,7 @@ struct LoggingExtrasTests {
     
     @Test
     func testLoggerMetadata() async throws {
-        try await withDependencies {
+        try await withDependencies { _ in
             // Logger should be automatically set to test value
         } operation: {
             @Dependency(\.logger) var logger
