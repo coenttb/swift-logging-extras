@@ -184,8 +184,16 @@ Enhanced logging method that merges provided metadata with file and line informa
 
 ## Related Packages
 
-- [swift-dependencies](https://github.com/pointfreeco/swift-dependencies) - A dependency management library inspired by SwiftUI's "environment."
-- [swift-log](https://github.com/apple/swift-log) - A Logging API for Swift
+### Used By
+
+- [swift-html-to-pdf](https://github.com/coenttb/swift-html-to-pdf): The Swift package for printing HTML to PDF.
+- [swift-server-foundation](https://github.com/coenttb/swift-server-foundation): A Swift package with tools to simplify server development.
+- [swift-urlrequest-handler](https://github.com/coenttb/swift-urlrequest-handler): A Swift package for URLRequest handling with structured error handling.
+
+### Third-Party Dependencies
+
+- [pointfreeco/swift-dependencies](https://github.com/pointfreeco/swift-dependencies): A dependency management library for controlling dependencies in Swift.
+- [apple/swift-log](https://github.com/apple/swift-log): A Logging API for Swift.
 
 ## Requirements
 
