@@ -184,7 +184,7 @@ Enhanced logging method that merges provided metadata with file and line informa
 
 ## Related Packages
 
-- [swift-dependencies](https://github.com/pointfreeco/swift-dependencies) - A dependency management library inspired by SwiftUI's Environment
+- [swift-dependencies](https://github.com/pointfreeco/swift-dependencies) - A dependency management library inspired by SwiftUI's "environment."
 - [swift-log](https://github.com/apple/swift-log) - A Logging API for Swift
 
 ## Requirements
